@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -10,7 +11,7 @@ file_handler.setFormatter(file_formater)
 logger.addHandler(file_handler)
 
 
-def search_phone(data):
+def search_phone(data: pd.DataFrame) -> json:
     """
     Принимает на вход DataFrame, осуществляет поиск операций на номер телефона и возвращает json-ответ
     """
