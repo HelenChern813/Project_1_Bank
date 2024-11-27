@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -48,4 +49,4 @@ def search_phone(data: pd.DataFrame) -> json:
         }
 
     logger.info("Функция вернула json-ответ")
-    return json.dumps(phone_transaction, indent=4)
+    return json.dumps(phone_transaction, indent=4, ensure_ascii=False)
