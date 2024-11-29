@@ -70,11 +70,13 @@ def info_cards(data: pd.DataFrame, path: str, date: str) -> list:
 
         total_spent = 0
         cashback = 0
-
-        for transactions in data_list:
-            if transactions["Номер карты"] == i:
-                total_spent += float(transactions["Сумма платежа"])
-                cashback += float(transactions["Кэшбэк"])
+        if i == 0.0:
+            continue
+        else:
+            for transactions in data_list:
+                if transactions["Номер карты"] == i:
+                    total_spent += float(transactions["Сумма платежа"])
+                    cashback += float(transactions["Кэшбэк"])
         dict_card = {"last_digits": i, "total_spent": round(total_spent, 2), "cashback": cashback}
         info_cards_list.append(dict_card)
     logger.info("Функция вернула объект с информацией о картах")

@@ -6,7 +6,7 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler("../logs/src.services.log", mode="w")
+file_handler = logging.FileHandler("../logs/src.services.log", mode="w", encoding="UTF-8")
 file_formater = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formater)
 logger.addHandler(file_handler)
