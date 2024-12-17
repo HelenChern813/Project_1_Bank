@@ -21,8 +21,8 @@ def main():
         file_path = "../data/operations.xlsx"
         df = file_df(file_path)
         # Для передачи другой даты - введите нужную дату
-        date = str(datetime.now())
-        date = str(datetime.strptime(date, "%d.%m.%Y %H:%M:%S"))
+        date = datetime.now()
+        date = str(date.strftime("%d.%m.%Y %H:%M:%S"))
         home_page_client = home_page(df, file_path, date)
         return home_page_client
     elif client == 2:
@@ -37,7 +37,7 @@ def main():
         df = file_df(file_path)
         list_category = df["Категория"].unique()
         print(
-            f"""Выберите иодну из категорий и введите ее название с большой буквы
+            f"""Выберите одну из категорий и введите ее название с большой буквы
 {list_category}"""
         )
         category_client = input("Введите категорию: ")
@@ -50,8 +50,8 @@ def main():
         file_path = "../data/operations.xlsx"
         df = file_df(file_path)
         # Для передачи другой даты - введите нужную дату
-        date = str(datetime.now())
-        date = str(datetime.strptime(date, "%d.%m.%Y %H:%M:%S"))
+        date = datetime.now()
+        date = str(date.strftime("%d.%m.%Y %H:%M:%S"))
         home_page_client = home_page(df, file_path, date)
         search_phone_client = search_phone(df)
         list_category = df["Категория"].unique()
@@ -66,3 +66,7 @@ def main():
         # Генерация файла. Если нужно задать имя файла, то передайте имя файла строкой в вызов декоратора функции
         spending_by_category(df, category_client, date)
         return home_page_client, search_phone_client
+
+
+if __name__ == "__main__":
+    main()

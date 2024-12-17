@@ -17,8 +17,10 @@ def record_file(file_name=None):
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             if file_name == None:
-                file_name = f'report_{result["Операция_1"]["Дата операции"]}'
-            with open(f"../{file_name}.json", "w", encoding="UTF-8") as file:
+                filename = f'report_{result["Операция_1"]["Дата операции"]}'.replace(":", "")
+            else:
+                filename = file_name
+            with open(f"../{filename}.json", "w", encoding="UTF-8") as file:
                 json.dump(result, file, indent=4, ensure_ascii=False)
 
         return wrapper
@@ -33,7 +35,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: str | 
     new_df = transactions[transactions["Категория"] == category]
     if date is None:
         date_now = datetime.datetime.now()
-        date = datetime.datetime.strftime(date_now, "%d.%m.%Y %H:%M:%S")
+        date = date_now.strftime("%Y-%m-%d %H:%M:%S.%f")
         logger.info(f"переданная дата - сегодня {date}")
 
     date_operations = []
@@ -41,16 +43,40 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: str | 
     logger.info(f"Переданная дата - {end_date}")
     if end_date.month == 1:
         first_month = 10
+        first_year = end_date.year - 1
+        first_day_date = end_date.replace(month=first_month, year=first_year)
+        logger.info(f"Дата по которую идет поиск - {first_day_date}")
+        for index, operation in new_df.iterrows():
+            if (
+                first_day_date
+                <= datetime.datetime.strptime(operation["Дата операции"], "%d.%m.%Y %H:%M:%S")
+                <= end_date
+            ):
+                date_operations.append(operation)
     elif end_date.month == 2:
         first_month = 11
+        first_year = end_date.year - 1
+        first_day_date = end_date.replace(month=first_month, year=first_year)
+        logger.info(f"Дата по которую идет поиск - {first_day_date}")
+        for index, operation in new_df.iterrows():
+            if (
+                first_day_date
+                <= datetime.datetime.strptime(operation["Дата операции"], "%d.%m.%Y %H:%M:%S")
+                <= end_date
+            ):
+                date_operations.append(operation)
     else:
         first_month = end_date.month - 2
 
-    first_day_date = end_date.replace(month=first_month)
-    logger.info(f"Дата по которую идет поиск - {first_day_date}")
-    for index, operation in new_df.iterrows():
-        if first_day_date <= datetime.datetime.strptime(operation["Дата операции"], "%d.%m.%Y %H:%M:%S") <= end_date:
-            date_operations.append(operation)
+        first_day_date = end_date.replace(month=first_month)
+        logger.info(f"Дата по которую идет поиск - {first_day_date}")
+        for index, operation in new_df.iterrows():
+            if (
+                first_day_date
+                <= datetime.datetime.strptime(operation["Дата операции"], "%d.%m.%Y %H:%M:%S")
+                <= end_date
+            ):
+                date_operations.append(operation)
 
     dict_operations = {}
     count_operations = 1
@@ -78,10 +104,3 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: str | 
         count_operations += 1
     logger.info("Создан словарь, который будет возвращать функция")
     return dict_operations
-
-
-if __name__ == "__main__":
-    file_path = "C:/Users/Helen/PycharmProjects/Project_1_Bank/data/operations.xlsx"
-    df = pd.read_excel(file_path)
-    date_1 = "28.03.2021 23:37:11"
-    spending_by_category(df, "Фастфуд", date_1)

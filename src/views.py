@@ -8,7 +8,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from src.utils import file_df, open_file_json, unique_cards
+from src.utils import open_file_json, unique_cards
 
 load_dotenv()
 API_KEY_CURRENCY = os.getenv("API_KEY_CURRENCY")
@@ -25,20 +25,24 @@ file_handler.setFormatter(file_formater)
 logger.addHandler(file_handler)
 
 
-def get_hello(date: str | None) -> json:
+def get_hello(date: str | None = None) -> json:
     """Вычисление текущего времени и определение нужного вступительного сообщения"""
 
+    logger.info(f"Переданная дата: {date}")
     if not date:
-        date = datetime.now()
-    date = datetime.strptime(date, "%d.%m.%Y %H:%M:%S")
+        date_format = datetime.now()
+    elif len(date) == 19:
+        date_format = datetime.strptime(date, "%d.%m.%Y %H:%M:%S")
+    else:
+        date_format = datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f")
 
-    if 4 <= date.hour <= 11:
+    if 4 <= date_format.hour <= 11:
         logger.info("Вывод сообщения: Доброе утро")
         return "Доброе утро"
-    elif 12 <= date.hour <= 15:
+    elif 12 <= date_format.hour <= 15:
         logger.info("Вывод сообщения: 'Добрый день'")
         return "Добрый день"
-    elif 16 <= date.hour <= 22:
+    elif 16 <= date_format.hour <= 22:
         logger.info("Вывод сообщения: 'Добрый вечер'")
         return "Добрый вечер"
     else:
@@ -174,12 +178,3 @@ def home_page(data: pd.DataFrame, path: str, date: str | None = None) -> json:
     }
     logger.info("Сформирован весь JSON-ответ на запорс 'Главной' страницы ")
     return json.dumps(output, indent=4, ensure_ascii=False)
-
-
-if __name__ == "__main__":
-
-    file_path = "../data/operations.xlsx"
-
-    df = file_df(file_path)
-    date = "30.11.2021 10:19:28"
-    print(home_page(df, file_path, date))

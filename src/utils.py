@@ -15,6 +15,7 @@ def file_df(path: str) -> pd.DataFrame:
 
 
 def unique_cards(path: str) -> list:
+    '''Убирает строки с пустой ячейкой "Номер карты"'''
 
     df = file_df(path)
     df = df["Номер карты"].dropna()
@@ -29,8 +30,3 @@ def open_file_json() -> dict:
     with open(full_path, "r+", encoding="utf-8") as file:
         data = json.load(file)
         return data
-
-
-if __name__ == "__main__":
-    file_path = "../data/operations.xlsx"
-    print(file_df(file_path)["Кэшбэк"])

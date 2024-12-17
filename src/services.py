@@ -14,7 +14,7 @@ logger.addHandler(file_handler)
 
 def search_phone(data: pd.DataFrame) -> json:
     """
-    Принимает на вход DataFrame, осуществляет поиск операций на номер телефона и возвращает json-ответ
+    Принимает на вход DataFrame, осуществляет поиск операций по номерам телефонов и возвращает json-ответ
     """
 
     pattern = re.compile(r"(\s\+7\s|\s\+\s7\s)")
