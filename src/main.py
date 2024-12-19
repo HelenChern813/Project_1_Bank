@@ -45,7 +45,7 @@ def main():
         # Если нужно взять текущую дату, то прсото не передавате этот параметр
         date = "31.12.2021 16:44:00"
         # Генерация файла. Если нужно задать имя файла, то передайте имя файла строкой в вызов декоратора функции
-        spending_by_category(df, category_client, date)
+        return spending_by_category(df, category_client, date)
     else:
         file_path = "../data/operations.xlsx"
         df = file_df(file_path)
@@ -64,9 +64,13 @@ def main():
         # Если нужно взять текущую дату, то прсото не передавате этот параметр
         date = "31.12.2021 16:44:00"
         # Генерация файла. Если нужно задать имя файла, то передайте имя файла строкой в вызов декоратора функции
-        spending_by_category(df, category_client, date)
-        return home_page_client, search_phone_client
+        by_category = spending_by_category(df, category_client, date)
+        return {
+            "home_page_client": home_page_client,
+            "search_phone_client": search_phone_client,
+            "spending_by_category": by_category,
+        }
 
 
 if __name__ == "__main__":
-    main()
+    print(main())

@@ -73,17 +73,32 @@ def test_get_actual_currencies_price(convert_mock):
     assert get_actual_currencies_price()[1]["rate"] == 100
 
 
-def test_get_actual_stocks_price():
+@patch("src.views.convert_stocks")
+def test_get_actual_stocks_price(convert_mock):
+    convert_mock.return_value = [
+        {"symbol": "PUPA", "price": 99.0},
+        {"symbol": "AAPL", "price": 100.0},
+        {"symbol": "AMZN", "price": 101.0},
+        {"symbol": "GOOGL", "price": 102.0},
+        {"symbol": "MSFT", "price": 103.0},
+        {"symbol": "TSLA", "price": 104.0},
+        {"symbol": "PEPSI", "price": 98.0},
+    ]
 
     assert get_actual_stocks_price()[0]["stock"] == "AAPL"
+    assert get_actual_stocks_price()[0]["price"] == 100.0
     assert type(get_actual_stocks_price()[0]["price"]) == type(0.0)
     assert get_actual_stocks_price()[1]["stock"] == "AMZN"
+    assert get_actual_stocks_price()[1]["price"] == 101.0
     assert type(get_actual_stocks_price()[1]["price"]) == type(0.0)
     assert get_actual_stocks_price()[2]["stock"] == "GOOGL"
+    assert get_actual_stocks_price()[2]["price"] == 102.0
     assert type(get_actual_stocks_price()[2]["price"]) == type(0.0)
     assert get_actual_stocks_price()[3]["stock"] == "MSFT"
+    assert get_actual_stocks_price()[3]["price"] == 103.0
     assert type(get_actual_stocks_price()[3]["price"]) == type(0.0)
     assert get_actual_stocks_price()[4]["stock"] == "TSLA"
+    assert get_actual_stocks_price()[4]["price"] == 104.0
     assert type(get_actual_stocks_price()[4]["price"]) == type(0.0)
 
 

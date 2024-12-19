@@ -22,6 +22,7 @@ def record_file(file_name=None):
                 filename = file_name
             with open(f"../{filename}.json", "w", encoding="UTF-8") as file:
                 json.dump(result, file, indent=4, ensure_ascii=False)
+            return result
 
         return wrapper
 
